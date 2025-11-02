@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2V0-15.25 試験対策クイズ</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f6fa;
+      --bg-dark: #1f2430;
+      --card-bg: #fff;
+      --card-bg-dark: #2b3245;
+      --border: #d9deeb;
+      --border-dark: #3a4156;
+      --text: #1b1f2a;
+      --text-dark: #f5f6fb;
+      --primary: #0077c6;
+      --primary-dark: #5cc4ff;
+      --danger: #d64045;
+      --warning: #f59f00;
+      --warning-dark: #ffd166;
+      --success: #2d9d4f;
+      --success-dark: #6ce29a;
+      font-family: "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+      }
+    }
+
+    .container {
+      width: min(960px, 100%);
+      display: grid;
+      gap: 24px;
+    }
+
+    .header {
+      padding: 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 12px 32px rgba(35, 55, 90, 0.12);
+    }
+
+    .header h1 {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    .header p {
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .header {
+        background: var(--card-bg-dark);
+        border-color: var(--border-dark);
+        box-shadow: none;
+      }
+    }
+
+    .loader {
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .loader-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .status {
+      margin: 0;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(0, 0, 0, 0.04);
+      font-size: 0.9rem;
+    }
+
+    .status--info {
+      border-color: rgba(0, 119, 198, 0.25);
+      background: rgba(0, 119, 198, 0.08);
+      color: var(--primary);
+    }
+
+    .status--success {
+      border-color: rgba(45, 157, 79, 0.2);
+      background: rgba(45, 157, 79, 0.08);
+      color: var(--success);
+    }
+
+    .status--warn {
+      border-color: rgba(245, 159, 0, 0.25);
+      background: rgba(245, 159, 0, 0.1);
+      color: var(--warning);
+    }
+
+    .status--error {
+      border-color: rgba(214, 64, 69, 0.3);
+      background: rgba(214, 64, 69, 0.1);
+      color: var(--danger);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .status {
+        border-color: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .status--info {
+        border-color: rgba(92, 196, 255, 0.35);
+        background: rgba(92, 196, 255, 0.12);
+        color: var(--primary-dark);
+      }
+      .status--success {
+        border-color: rgba(108, 226, 154, 0.4);
+        background: rgba(108, 226, 154, 0.18);
+        color: var(--success-dark);
+      }
+      .status--warn {
+        border-color: rgba(255, 209, 102, 0.4);
+        background: rgba(255, 209, 102, 0.18);
+        color: var(--warning-dark);
+      }
+      .status--error {
+        border-color: rgba(214, 64, 69, 0.4);
+        background: rgba(214, 64, 69, 0.2);
+        color: var(--danger);
+      }
+    }
+
+    .quiz {
+      display: grid;
+      gap: 24px;
+    }
+
+    .quiz__empty {
+      margin: 0;
+      padding: 24px;
+      text-align: center;
+      background: var(--card-bg);
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      color: #6a728f;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .quiz__empty {
+        background: var(--card-bg-dark);
+        border-color: var(--border-dark);
+        color: rgba(245, 246, 251, 0.7);
+      }
+    }
+
+    .question {
+      padding: 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(35, 55, 90, 0.1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .question {
+        background: var(--card-bg-dark);
+        border-color: var(--border-dark);
+        box-shadow: none;
+      }
+    }
+
+    .question__title {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .question__type {
+      margin: 0 0 16px;
+      font-size: 0.9rem;
+      color: #566080;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .question__type {
+        color: rgba(245, 246, 251, 0.6);
+      }
+    }
+
+    .question__form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 8px;
+      padding: 12px 16px;
+      border: 1px solid transparent;
+      transition: border 0.2s ease, background 0.2s ease;
+    }
+
+    .option input {
+      margin-top: 4px;
+    }
+
+    .option.is-correct {
+      border-color: var(--primary);
+    }
+
+    .option.is-incorrect {
+      border-color: var(--danger);
+    }
+
+    .option.is-partial {
+      border-color: var(--warning);
+    }
+
+    .option.muted {
+      opacity: 0.55;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .option {
+        background: rgba(255, 255, 255, 0.03);
+      }
+    }
+
+    .question__actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #00a2ff);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(0, 119, 198, 0.2);
+    }
+
+    .btn-primary:disabled {
+      background: #b0c8dd;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: rgba(0, 0, 0, 0.08);
+      color: inherit;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-dark);
+      }
+    }
+
+    .btn.reset {
+      background: rgba(0, 0, 0, 0.08);
+      color: inherit;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .btn.reset {
+        background: rgba(255, 255, 255, 0.08);
+      }
+    }
+
+    .question__feedback {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(0, 119, 198, 0.08);
+      border: 1px solid rgba(0, 119, 198, 0.2);
+    }
+
+    .question__feedback.is-incorrect {
+      background: rgba(214, 64, 69, 0.1);
+      border-color: rgba(214, 64, 69, 0.3);
+    }
+
+    .question__feedback.is-partial {
+      background: rgba(245, 159, 0, 0.12);
+      border-color: rgba(245, 159, 0, 0.35);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .question__feedback {
+        background: rgba(92, 196, 255, 0.1);
+        border: 1px solid rgba(92, 196, 255, 0.3);
+      }
+      .question__feedback.is-incorrect {
+        background: rgba(214, 64, 69, 0.15);
+      }
+      .question__feedback.is-partial {
+        background: rgba(255, 209, 102, 0.18);
+        border-color: rgba(255, 209, 102, 0.4);
+      }
+      .btn.reset {
+        background: rgba(255, 255, 255, 0.08);
+      }
+    }
+
+    .question__result {
+      margin: 0 0 8px;
+      font-weight: 700;
+    }
+
+    .question__explanation {
+      margin: 0;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>2V0-15.25 試験対策クイズ</h1>
+      <p>問題を解いて理解度を確認しましょう。選択肢を選んで「答えを表示」を押すと、正解・部分正解・不正解の判定と補足が表示されます。questions.jsonを書き換えることで出題内容を更新できます。</p>
+      <div class="loader">
+        <div class="loader-controls">
+          <button type="button" class="btn btn-secondary" id="load-button">questions.json を選択</button>
+          <input type="file" id="file-input" accept="application/json" hidden>
+        </div>
+        <p class="status status--info" id="status">questions.json を自動読み込みしています…</p>
+      </div>
+    </header>
+    <section id="quiz" class="quiz" aria-live="polite"></section>
+  </main>
+
+  <template id="question-template">
+    <article class="question">
+      <h2 class="question__title"></h2>
+      <p class="question__type"></p>
+      <form class="question__form"></form>
+      <div class="question__actions">
+        <button type="button" class="btn btn-primary show-answer">答えを表示</button>
+        <button type="button" class="btn reset">リセット</button>
+      </div>
+      <div class="question__feedback" hidden>
+        <p class="question__result"></p>
+        <p class="question__explanation"></p>
+      </div>
+    </article>
+  </template>
+
+  <script type="module">
+    const quizContainer = document.getElementById('quiz');
+    const questionTemplate = document.getElementById('question-template');
+    const statusEl = document.getElementById('status');
+    const loadButton = document.getElementById('load-button');
+    const fileInput = document.getElementById('file-input');
+
+    const QUESTION_TYPE_LABEL = {
+      single: '【単一選択】最も適切な選択肢を1つ選んでください',
+      multiple: '【複数選択】該当するものをすべて選んでください',
+    };
+
+    const RESULT_MESSAGES = {
+      correct: '正解です。',
+      partial: '惜しいです。ほぼ正解なので補足を確認しましょう。',
+      incorrect: '不正解です。正しい選択肢を確認しましょう。',
+    };
+
+    init();
+
+    async function init() {
+      const autoLoaded = await tryLoadDefaultFile();
+      if (!autoLoaded) {
+        setStatus('questions.json を自動読み込みできませんでした。上のボタンからファイルを選択してください。', 'warn');
+      }
+    }
+
+    async function tryLoadDefaultFile() {
+      try {
+        const response = await fetch('questions.json', { cache: 'no-cache' });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const text = await response.text();
+        const questions = parseQuestions(text);
+        renderQuiz(questions);
+        setStatus('questions.json から読み込みました。', 'success');
+        return true;
+      } catch (error) {
+        console.warn('questions.json の自動読み込みに失敗しました。', error);
+        return false;
+      }
+    }
+
+    loadButton.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', (event) => {
+      const [file] = event.target.files ?? [];
+      if (!file) {
+        return;
+      }
+      readQuestionsFromFile(file);
+      fileInput.value = '';
+    });
+
+    function readQuestionsFromFile(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const text = String(reader.result ?? '');
+          const questions = parseQuestions(text);
+          renderQuiz(questions);
+          setStatus(`${file.name} から読み込みました。`, 'success');
+        } catch (error) {
+          console.error(error);
+          setStatus('JSONの解析に失敗しました。ファイルの形式を確認してください。', 'error');
+        }
+      };
+      reader.onerror = () => {
+        setStatus('ファイルの読み込みに失敗しました。', 'error');
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+
+    function parseQuestions(text) {
+      const data = JSON.parse(text);
+      if (!Array.isArray(data)) {
+        throw new Error('JSONの形式が配列ではありません');
+      }
+      return data;
+    }
+
+    function renderQuiz(questions) {
+      quizContainer.innerHTML = '';
+
+      if (!Array.isArray(questions) || questions.length === 0) {
+        const notice = document.createElement('p');
+        notice.className = 'quiz__empty';
+        notice.textContent = '問題が見つかりません。questions.json の内容を確認してください。';
+        quizContainer.appendChild(notice);
+        return;
+      }
+
+      questions.forEach((question, index) => {
+        const node = questionTemplate.content.cloneNode(true);
+        const titleEl = node.querySelector('.question__title');
+        const typeEl = node.querySelector('.question__type');
+        const formEl = node.querySelector('.question__form');
+        const showAnswerBtn = node.querySelector('.show-answer');
+        const resetBtn = node.querySelector('.reset');
+        const feedbackEl = node.querySelector('.question__feedback');
+        const resultEl = node.querySelector('.question__result');
+        const explanationEl = node.querySelector('.question__explanation');
+
+        const questionId = `q${index + 1}`;
+
+        titleEl.textContent = `${index + 1}. ${question.prompt}`;
+        typeEl.textContent = QUESTION_TYPE_LABEL[question.type] ?? '';
+
+        buildOptions(formEl, question, questionId);
+
+        showAnswerBtn.addEventListener('click', () => {
+          const selectedValues = getSelectedValues(formEl);
+          if (selectedValues.length === 0) {
+            resultEl.textContent = '選択肢を選んでから答えを表示してください。';
+            feedbackEl.classList.remove('is-incorrect', 'is-partial');
+            feedbackEl.hidden = false;
+            return;
+          }
+          const evaluation = evaluateAnswer(question, selectedValues);
+          decorateOptions(formEl, question, selectedValues, evaluation);
+          resultEl.textContent = RESULT_MESSAGES[evaluation.status] ?? '結果を確認してください。';
+          feedbackEl.classList.remove('is-incorrect', 'is-partial');
+          if (evaluation.status === 'incorrect') {
+            feedbackEl.classList.add('is-incorrect');
+          } else if (evaluation.status === 'partial') {
+            feedbackEl.classList.add('is-partial');
+          }
+          explanationEl.textContent = `補足: ${question.explanation}`;
+          feedbackEl.hidden = false;
+          showAnswerBtn.disabled = true;
+        });
+
+        resetBtn.addEventListener('click', () => {
+          Array.from(formEl.elements).forEach((input) => {
+            if (input instanceof HTMLInputElement) {
+              input.checked = false;
+            }
+          });
+          clearDecorations(formEl);
+          feedbackEl.hidden = true;
+          feedbackEl.classList.remove('is-incorrect', 'is-partial');
+          showAnswerBtn.disabled = false;
+        });
+
+        quizContainer.appendChild(node);
+      });
+    }
+
+    function buildOptions(formEl, question, groupName) {
+      question.options.forEach((option) => {
+        const wrapper = document.createElement('label');
+        wrapper.className = 'option';
+
+        const input = document.createElement('input');
+        input.type = question.type === 'multiple' ? 'checkbox' : 'radio';
+        input.name = question.type === 'multiple' ? `${groupName}[]` : groupName;
+        input.value = String(option.id);
+
+        const text = document.createElement('span');
+        text.textContent = option.text;
+
+        wrapper.appendChild(input);
+        wrapper.appendChild(text);
+
+        formEl.appendChild(wrapper);
+      });
+    }
+
+    function getSelectedValues(formEl) {
+      return Array.from(formEl.querySelectorAll('input:checked')).map((input) => input.value);
+    }
+
+    function evaluateAnswer(question, selectedValues) {
+      const correctValues = getCorrectValues(question).sort();
+      const actual = selectedValues.slice().map(String).sort();
+
+      if (arraysEqual(actual, correctValues)) {
+        return { status: 'correct', matchedSet: correctValues };
+      }
+
+      const partialCombos = normalizePartialAnswers(question);
+      for (const combo of partialCombos) {
+        if (arraysEqual(actual, combo)) {
+          return { status: 'partial', matchedSet: combo };
+        }
+      }
+
+      if (question.type === 'multiple') {
+        const correctSet = new Set(correctValues);
+        const hasSelection = actual.length > 0;
+        const isSubsetOfCorrect = actual.every((value) => correctSet.has(value));
+        if (hasSelection && isSubsetOfCorrect) {
+          return { status: 'partial', matchedSet: actual };
+        }
+      }
+
+      return { status: 'incorrect', matchedSet: [] };
+    }
+
+    function decorateOptions(formEl, question, selectedValues, evaluation) {
+      clearDecorations(formEl);
+      const correctValues = getCorrectValues(question);
+      const correctSet = new Set(correctValues);
+      const partialSet = new Set(evaluation.status === 'partial' ? evaluation.matchedSet : []);
+      const selectedSet = new Set(selectedValues);
+
+      formEl.querySelectorAll('.option').forEach((optionEl) => {
+        const input = optionEl.querySelector('input');
+        if (!(input instanceof HTMLInputElement)) {
+          return;
+        }
+        const value = input.value;
+        const isSelected = selectedSet.has(value);
+        const isCorrect = correctSet.has(value);
+        const isPartial = partialSet.has(value);
+
+        if (isCorrect) {
+          optionEl.classList.add('is-correct');
+        }
+        if (isPartial && !isCorrect) {
+          optionEl.classList.add('is-partial');
+        }
+        if (isSelected && !isCorrect && !isPartial) {
+          optionEl.classList.add('is-incorrect');
+        }
+        if (!isSelected && !isCorrect && !isPartial && evaluation.status === 'incorrect') {
+          optionEl.classList.add('muted');
+        }
+      });
+    }
+
+    function clearDecorations(formEl) {
+      formEl.querySelectorAll('.option').forEach((optionEl) => {
+        optionEl.classList.remove('is-correct', 'is-incorrect', 'is-partial', 'muted');
+      });
+    }
+
+    function getCorrectValues(question) {
+      if (Array.isArray(question.answer)) {
+        return question.answer.map(String);
+      }
+      return [String(question.answer)];
+    }
+
+    function normalizePartialAnswers(question) {
+      const { partialAnswers } = question;
+      if (!partialAnswers) {
+        return [];
+      }
+      const asArray = Array.isArray(partialAnswers) ? partialAnswers : [partialAnswers];
+      return asArray.map((entry) => {
+        if (Array.isArray(entry)) {
+          return entry.map(String).sort();
+        }
+        return [String(entry)];
+      });
+    }
+
+    function arraysEqual(a, b) {
+      if (a.length !== b.length) {
+        return false;
+      }
+      return a.every((value, index) => value === b[index]);
+    }
+
+    function setStatus(message, tone = 'info') {
+      statusEl.textContent = message;
+      statusEl.classList.remove('status--info', 'status--success', 'status--warn', 'status--error');
+      const toneClass = {
+        info: 'status--info',
+        success: 'status--success',
+        warn: 'status--warn',
+        error: 'status--error',
+      }[tone] ?? 'status--info';
+      statusEl.classList.add(toneClass);
+    }
+  </script>
+</body>
+</html>

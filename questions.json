@@ -1,0 +1,82 @@
+[
+  {
+    "id": "host-replacement-step",
+    "type": "single",
+    "prompt": "VMware Cloud Foundationの管理ドメインでESXiホストが故障し交換が必要になりました。SDDC Managerで交換作業を開始する前に最初に実施すべき正しい手順はどれですか？",
+    "options": [
+      { "id": "a", "text": "故障したホストをvCenter Serverからメンテナンスモードにせず直接削除する" },
+      { "id": "b", "text": "交換用のESXiホストをSDDC ManagerでCommission(取り込み)状態にする" },
+      { "id": "c", "text": "NSX ManagerでTransport Node構成をすべて手動で削除する" },
+      { "id": "d", "text": "SDDC ManagerのInventory Syncを実行して自動的にホストを置き換える" }
+    ],
+    "answer": "b",
+    "partialAnswers": ["c"],
+    "explanation": "Replace Hostウィザードでは、事前に交換対象ホストをCommission済みとしてSDDC Managerのインベントリに登録しておく必要があります。Transport Nodeの片付けはウィザードが後段で実施するため、先に手動で削除する必要はありません。"
+  },
+  {
+    "id": "management-domain-components",
+    "type": "multiple",
+    "prompt": "Bring-up完了直後の管理ドメインに含まれるコアコンポーネントをすべて選択してください。",
+    "options": [
+      { "id": "a", "text": "SDDC Managerアプライアンス" },
+      { "id": "b", "text": "NSX Managerクラスタ" },
+      { "id": "c", "text": "VMware Horizon Connection Server" },
+      { "id": "d", "text": "管理ドメイン用vCenter Server" },
+      { "id": "e", "text": "VMware Aria Operations for Logs" }
+    ],
+    "answer": ["a", "b", "d"],
+    "partialAnswers": [
+      ["a", "b", "d", "e"],
+      ["a", "b", "e"],
+      ["a", "d", "e"],
+      ["b", "d", "e"]
+    ],
+    "explanation": "管理ドメインにはSDDC Manager、NSX Managerクラスタ、管理ドメイン専用のvCenter ServerといったVCFの中核サービスが自動的にデプロイされます。Aria Operations for Logsは価値ある追加機能ですがBring-up直後に含まれる必須構成ではありません。"
+  },
+  {
+    "id": "vi-workload-domain-prereq",
+    "type": "multiple",
+    "prompt": "SDDC Managerで新しいVI Workload Domainを作成する前の前提条件として正しいものをすべて選択してください。",
+    "options": [
+      { "id": "a", "text": "利用予定のESXiホストをSDDC ManagerでCommission済みにしておく" },
+      { "id": "b", "text": "各ESXiホストにNSX ManagerからTransport Node設定を手動で投入しておく" },
+      { "id": "c", "text": "作成するWorkload Domain向けのネットワークプールをSDDC Managerで準備する" },
+      { "id": "d", "text": "各ホストのvCenter Server証明書を個別に更新しておく" },
+      { "id": "e", "text": "各ホストに事前にvSphere Distributed Switchを構成しておく" }
+    ],
+    "answer": ["a", "c"],
+    "partialAnswers": [
+      ["a", "e"],
+      ["c", "e"]
+    ],
+    "explanation": "VI Workload Domainの展開では、SDDC ManagerでCommission済みホストとネットワークプールが必須のインプットです。Transport Nodeの構成やvSphere Distributed Switch設定はウィザードが自動的に処理します。"
+  },
+  {
+    "id": "bundle-download-service",
+    "type": "single",
+    "prompt": "VMware Cloud Foundationでパッチバンドルを取得し、ライフサイクル管理のステージングを行うコアサービスはどれですか？",
+    "options": [
+      { "id": "a", "text": "SDDC ManagerのLifecycle Managementサービス" },
+      { "id": "b", "text": "ESXiホストのesxcli software profileコマンド" },
+      { "id": "c", "text": "NSX Managerのアップグレードサービス" },
+      { "id": "d", "text": "VMware Aria Suite Lifecycle" }
+    ],
+    "answer": "a",
+    "partialAnswers": ["d"],
+    "explanation": "VCFのライフサイクル管理はSDDC ManagerのLifecycle Managementサービスが一元的に担い、オンライン/オフラインのバンドル取得からステージング、適用までを制御します。Aria Suite Lifecycleは別製品群の管理には有用ですが、VCFバンドルの取得元ではありません。"
+  },
+  {
+    "id": "sddc-manager-backup",
+    "type": "single",
+    "prompt": "SDDC Managerの設定を保護するために推奨されるバックアップ方法はどれですか？",
+    "options": [
+      { "id": "a", "text": "SDDC Manager UIで外部SFTPサーバーを指定してバックアップジョブをスケジュールする" },
+      { "id": "b", "text": "vCenter Serverのイメージレベルスナップショットのみを定期取得する" },
+      { "id": "c", "text": "ESXi ShellからddコマンドでSDDC Managerのvmdkをコピーする" },
+      { "id": "d", "text": "Aria Suite LifecycleでSDDC Managerアプライアンスをバックアップする" }
+    ],
+    "answer": "a",
+    "partialAnswers": ["d"],
+    "explanation": "SDDC Managerには組み込みのバックアップ機能があり、外部SFTPリポジトリを設定した定期バックアップが推奨されます。Aria Suite LifecycleはAria製品群の保護には役立ちますが、SDDC Manager設定の一次バックアップ手段にはなりません。スナップショットや手動コピーもサポート要件を満たしません。"
+  }
+]
